@@ -74,6 +74,10 @@ void HttpResponse::validateResponse() const
   switch (statusCode) {
   case 200: // OK
   case 206: // Partial Content
+    // for baidu download: range is not standardized
+    if (std::string::npos != httpRequest_->getURIHost().find("www.baidu")) {
+      return;
+    }
     if (!httpHeader_->defined(HttpHeader::TRANSFER_ENCODING)) {
       // compare the received range against the requested range
       auto responseRange = httpHeader_->getRange();
